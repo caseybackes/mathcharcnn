@@ -20,14 +20,18 @@ def create_training_data(data_directory, categories, shuffle=False, save_pickle=
         class_num = categories.index(category) # index the label name to a number 
         # print('class num: ',class_num)
         for img in os.listdir(path):
+<<<<<<< HEAD
             if img != '.DS_Store':
+=======
+            if img != ".DS_Store"
+>>>>>>> ec2-dsinlp
                 # print(os.path.join(data_directory,img))
                 # print("image to search for: ", img)
                 im_array = cv2.imread(os.path.join(path,img),cv2.IMREAD_GRAYSCALE) 
                 new_array = cv2.resize(im_array, (45,45))
                 training_data.append([im_array, class_num])
                 #print(f'class: {category},img: ', img)
-    print(f"Built {len(categories)} classes.")
+    print("Built ", len(categories)," classes.")
 
 
     if shuffle:    

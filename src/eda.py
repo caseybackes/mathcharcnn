@@ -266,21 +266,49 @@ fig = plt.figure(figsize=(8,3))
 idx_worst_misclass = np.argsort(list( data_sorted_normed.values()))[0:6]
 worst_misclassed = [categories[x] for x in idx_worst_misclass]
 
-fig, axs = plt.subplots(5, 20,figsize=(15,6))
-for c in range(len(worst_misclassed)-1):
-    for i in range(20):
-        class_path = os.path.join(data_directory, worst_misclassed[c])
-        pickone = random.choice(os.listdir(class_path))
-        path_to_one = os.path.join(class_path,pickone)
-        im_array = cv2.imread(path_to_one,cv2.IMREAD_GRAYSCALE) 
-        im_array_resized = cv2.resize(im_array, (80,80))
-        axs[c, i].imshow(im_array_resized,cmap='gist_gray')
-        axs[c, i].set_xticks([]); axs[c,i].set_yticks([])
-        axs[c, 0].set_ylabel(worst_misclassed[c])
-fig.text(x=0.31, y=0.01, s='Random samples from the classes most misclassified', \
-    color='#888888', ha='center', va='bottom', fontsize=20)
-plt.suptitle("Top 5 Worst Offenders",fontsize=20)
-plt.show()
+def plot_imgrows(rows,cols,categories, data_directory,title,imsize=80,):
+    fig,axs = plt.subplots(rows,cols,figsize =(rows,cols))
+    for c in range(len(categories)-1):
+        for i in range(cols):
+            print("c: ", c, '\t i: ', i)
+            class_path = os.path.join(data_directory, categories[c])
+            pickone = random.choice(os.listdir(class_path))
+            path_to_one = os.path.join(class_path, pickone)
+            im_array = cv2.imread(path_to_one,cv2.IMREAD_GRAYSCALE)
+            im_array_resized = cv2.resize(im_array,(imsize,imsize))
+            axs[c, i].imshow(im_array_resized,cmap='gist_gray')
+            axs[c, i].set_xticks([]); axs[c,i].set_yticks([])
+            axs[c, 0].set_ylabel(categories[c]).set_rotation(0)
+    plt.suptitle(title,fontsize=20)
+    fig.tight_layout(pad=0)
+    plt.show()
+    return ax 
+plot_imgrows(len(categories)-1, 10, categories,data_directory, title='Classes Trained in CNN Model',imsize=50)
+'''
+fig.tight_layout(
+    renderer=None,
+    pad=1.08,
+    h_pad=None,
+    w_pad=None,
+    rect=None,
+)
+'''
+#!TODO: TURN THE FOLLOWING INTO A FUNCTION AND USE FOR THE WORST OFFENDERS AND THE CLASS-SET TRAINED ON. 
+# fig, axs = plt.subplots(5, 20,figsize=(15,6))
+# for c in range(len(worst_misclassed)-1):
+#     for i in range(20):
+#         class_path = os.path.join(data_directory, worst_misclassed[c])
+#         pickone = random.choice(os.listdir(class_path))
+#         path_to_one = os.path.join(class_path,pickone)
+#         im_array = cv2.imread(path_to_one,cv2.IMREAD_GRAYSCALE) 
+#         im_array_resized = cv2.resize(im_array, (80,80))
+#         axs[c, i].imshow(im_array_resized,cmap='gist_gray')
+#         axs[c, i].set_xticks([]); axs[c,i].set_yticks([])
+#         axs[c, 0].set_ylabel([c])
+# fig.text(x=0.31, y=0.01, s='Random samples from the classes most misclassified', \
+#     color='#888888', ha='center', va='bottom', fontsize=20)
+# plt.suptitle("Top 5 Worst Offenders",fontsize=20)
+# plt.show()
 
 
 
