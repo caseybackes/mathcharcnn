@@ -1,9 +1,40 @@
-import os
+import os,cv2
 import numpy as np 
 import matplotlib.pyplot as plt 
 from load_model import load_model
 from class_count import class_count
 
+def add_value_labels(ax,sigfigs,spacing=5):
+    # For each bar: Place a label
+    for rect in ax.patches:
+        # Get X and Y placement of label from rect.
+        x_value = rect.get_width()
+        y_value = rect.get_y() + rect.get_height() / 2
+
+        # Number of points between bar and label. Change to your liking.
+        space = 5
+        # Vertical alignment for positive values
+        ha = 'left'
+
+        # If value of bar is negative: Place label left of bar
+        if x_value < 0:
+            # Invert space to place label to the left
+            space = spacing #*= -1
+            # Horizontally align label at right
+            ha = 'right'
+
+        # Use X value as label and format number with one decimal place
+        label = round(x_value,sigfigs)#"{:.4f}".format(x_value)
+
+        # Create annotation
+        plt.annotate(
+            label,                      # Use `label` as label
+            (x_value, y_value),         # Place label at end of the bar
+            xytext=(space, 0),          # Horizontally shift label by `space`
+            textcoords="offset points", # Interpret `xytext` as offset in points
+            va='center',                # Vertically center label
+            ha=ha)                      # Horizontally align label differently for
+                                        # positive and negative values.
 
 
 def plot_class_distribution(class_list): 
@@ -13,10 +44,9 @@ def plot_class_distribution(class_list):
     data_directory = '../../../../DataScienceProjects/handwrittenmathsymbols/extracted_images'
     # all_classes = [os.listdir(os.path.join(data_directory,c)) for c in class_list]
     all_classes = class_list
-    print('Completed up to "all classes"')
     # all_classes.remove('.DS_Store')
     classes = class_count(all_classes,data_directory, verbose_only=False) # all classes(folders) in the image-files directory
-    print("returned from class_count(): ",classes)
+    # print("returned from class_count(): ",classes)
 
     # - - - WHAT IS THE DISTRIBUTION OF CLASSES? 
     labels = np.array(list(classes.keys()))
@@ -39,16 +69,18 @@ def plot_class_distribution(class_list):
     ax.set_ylabel('Class Name'); ax.set_xlabel('Count') 
     ax.set_title("Mathematical Character Histogram") 
     plt.ylim(min(y)-1, max(y)+1)
+    add_value_labels(ax,sigfigs=0)
     fig.tight_layout(pad=0)
     fig.savefig('../plots/Mathematical Character Histogram.png', dpi=125)
     plt.show(block=False)
     return ax
+
 # ---------------------------------------------------------
 
 # - - - WHERE DOES THE MODEL GO WRONG? WHAT CHARS CAN WE CONSISTANTLY RECOGNIZE? 
 
 # model = load_model('../models/simpleCNN-2020-02-04T:13:14:02.h5')
-model_id = 'simpleCNN-2020-02-05T:14:12:03'#.h5'
+model_id = 'simpleCNN-2020-02-05T:20:53:54'#.h5'
 model = load_model(f'../models/{model_id}.h5')
 
 with open(f'../models/reports/{model_id}.txt', 'r') as f:
@@ -58,6 +90,7 @@ with open(f'../models/reports/{model_id}.txt', 'r') as f:
     # res = categories.strip('][').split(', ') 
     # res.remove('\n')
     f.close()
+ax = plot_class_distribution(categories)
 
 
 yhat_probs = model.predict(X_test)
@@ -75,12 +108,12 @@ for i,y in enumerate(yhat_probs):
     #print('TOP 3 CLASSES: ', top_cats[:3])
     #print('TOP 3 PROBS:   ',y[idx][:3],'\n')
     if top_cats[0] != true_label:
-        print('\nBad prediction: ')
-        print(y)
-        print('TRUE LABEL: ',true_label)
-        print(idx)
-        print('TOP 3 CLASSES: ', top_cats[:3])
-        print('TOP 3 PROBS:   ',y[idx][:3],'\n')
+        # print('\nBad prediction: ')
+        # print(y)
+        # print('TRUE LABEL: ',true_label)
+        # print(idx)
+        # print('TOP 3 CLASSES: ', top_cats[:3])
+        # print('TOP 3 PROBS:   ',y[idx][:3],'\n')
         bad_pred.append([true_label,top_cats[:3],y[idx][:3]])
     else:
         good_pred.append([true_label,top_cats[:3],y[idx][:3]])
@@ -96,12 +129,9 @@ for num,pred in enumerate(np.array(bad_pred)):
     top3probs = pred[2]
     if predicted_label in top3guesses:
         second_guess_correct+=1
-
+print("Of the ",len(np.array(bad_pred)), 'bad predictions, ',second_guess_correct, 'had the correct prediction as the second highest probability of classification.')
 #>>> print(second_guess_correct)
 #>>> ...All of them, actually. 
-
-
-
 
 # - - - PLOT: PERCENTAGE OF CORRECT CLASSIFICATION PER CLASS
 test_vs_prediction = []
@@ -132,14 +162,15 @@ labels_sorted = labels[idx]
 y = np.arange(len(data))
 # --- plot
 width = 0.8
-fig, ax = plt.subplots(figsize=(8, 3.5)) 
-ax.barh(y, data_sorted, width, color='wheat', align='center')
+fig, ax = plt.subplots(figsize=(8, 10)) 
+ax.barh(y, data_sorted, width, color='blue', align='center')
 # --- tidy-up and save 
 ax.set_yticks(y) 
 ax.set_yticklabels(labels_sorted) 
 ax.xaxis.grid(True) 
 ax.set_ylabel('Classes Trained in this Model'); ax.set_xlabel('Percentage Correctly Classified') 
 ax.set_title("Percentage of Correct Classifications By Class Type") 
+add_value_labels(ax,3)
 fig.tight_layout(pad=1) 
 plt.show()
 # fig.savefig('percent.png', dpi=125) 
@@ -150,15 +181,18 @@ h = np.array(bad_pred)
 for h_i in h: 
     char_class = h_i[0] 
     first_guess = h_i[1][0] 
-    first_guess_p = h_i[2][0]; first_guess_p = round(first_guess_p,4)
+    first_guess_p = h_i[2][0]
+    first_guess_p = round(first_guess_p,4)
     second_guess = h_i[1][1] 
-    second_guess_p = h_i[2][1];second_guess_p = round(second_guess_p,4)
+    second_guess_p = h_i[2][1]
+    second_guess_p = round(second_guess_p,4)
     third_guess = h_i[1][2] 
-    third_guess_p = h_i[2][2]; third_guess_p = round(third_guess_p,4)
+    third_guess_p = h_i[2][2]
+    third_guess_p = round(third_guess_p,4)
     
     if char_class == second_guess: 
         print("it was the second guess") 
-        print(f"char class: '{char_class}' \t first guess: '{first_guess}' @ {first_guess_p} \tsecond guess: '{second_guess}' @ {second_guess_p}") 
+        print(f"char class: '{char_class}' \t first guess: '{first_guess}' @ {round(first_guess_p,4)}% \tsecond guess: '{second_guess}' @ {second_guess_p}%") 
         print('\n') 
 
 
@@ -180,15 +214,16 @@ labels_sorted = labels[idx]
 y = np.arange(len(data))
 # --- plot
 width = 0.8
-fig, ax = plt.subplots(figsize=(8, 3.5)) 
+fig, ax = plt.subplots(figsize=(8,10)) 
 # frequency by absolute value of counts
-ax.barh(y, data_sorted, width, color='wheat', align='center')
+ax.barh(y, data_sorted, width, color='blue', align='center')
 # --- tidy-up and save 
 ax.set_yticks(y) 
 ax.set_yticklabels(labels_sorted) 
 ax.xaxis.grid(True) 
 ax.set_ylabel('Classes Trained in this Model'); ax.set_xlabel('Misclassification Frequency') 
 ax.set_title("Counts of Misclassifications by Character Class") 
+add_value_labels(ax,0)
 fig.tight_layout(pad=1) 
 plt.show()
 
@@ -210,51 +245,45 @@ for ld in zipped_sorted_labels_data:
 y = np.arange(len(data))
 # --- plot
 width = 0.8
-fig, ax = plt.subplots(figsize=(8, 3.5)) 
+fig, ax = plt.subplots(figsize=(8, 10)) 
 # frequency by absolute value of counts
-ax.barh(y, data_sorted_normed.values(), width, color='wheat', align='center')
+ax.barh(y, data_sorted_normed.values(), width, color='blue', align='center')
 # --- tidy-up and save 
 ax.set_yticks(y) 
 ax.set_yticklabels(labels_sorted) 
 ax.xaxis.grid(True) 
 ax.set_ylabel('Classes Trained in this Model'); ax.set_xlabel('Misclassification Frequency Normalized') 
 ax.set_title("Normalized Counts of Misclassifications by Character Class") 
+add_value_labels(ax,3)
 fig.tight_layout(pad=1) 
 plt.show()
 
+# - - -  OF THE CLASSES COMMONLY MISCLASSIFIED, SHOW SOME EXAMPLES OF THE IMAGES
+fig = plt.figure(figsize=(8,3)) 
+# fig.text(x=0.01, y=0.01, s='Figure',color='#888888', ha='left', va='bottom', fontsize=20)
+# class_imgs1= os.listdir(os.path.join(data_directory,category)) 
+# the five worst image misclassifications
+idx_worst_misclass = np.argsort(list( data_sorted_normed.values()))[0:6]
+worst_misclassed = [categories[x] for x in idx_worst_misclass]
+
+fig, axs = plt.subplots(5, 20,figsize=(15,6))
+for c in range(len(worst_misclassed)-1):
+    for i in range(20):
+        class_path = os.path.join(data_directory, worst_misclassed[c])
+        pickone = random.choice(os.listdir(class_path))
+        path_to_one = os.path.join(class_path,pickone)
+        im_array = cv2.imread(path_to_one,cv2.IMREAD_GRAYSCALE) 
+        im_array_resized = cv2.resize(im_array, (80,80))
+        axs[c, i].imshow(im_array_resized,cmap='gist_gray')
+        axs[c, i].set_xticks([]); axs[c,i].set_yticks([])
+        axs[c, 0].set_ylabel(worst_misclassed[c])
+fig.text(x=0.31, y=0.01, s='Random samples from the classes most misclassified', \
+    color='#888888', ha='center', va='bottom', fontsize=20)
+plt.suptitle("Top 5 Worst Offenders",fontsize=20)
+plt.show()
+
+
+
 # - - - What are the common misclassifications? ie: 'pi' is commonly mistaken for 'v' 
 # - - - What is the probability difference between the false classification and the true label? 
-
-
-
-'''
-[('rightarrow', ':', 1703, 'images'),
- ('sin', ':', 4293, 'images'),
- ('i', ':', 5140, 'images'),
- ('R', ':', 2671, 'images'),
- ('0', ':', 6914, 'images'),
- ('times', ':', 3251, 'images'),
- ('leq', ':', 973, 'images'),
- ('9', ':', 3737, 'images'),
- ('gt', ':', 258, 'images'),
- ('+', ':', 25112, 'images'),
- ('u', ':', 1269, 'images'),
- ('N', ':', 10862, 'images'),
- ('mu', ':', 177, 'images'),
- ('exists', ':', 21, 'images'),
- ('gamma', ':', 409, 'images'),
- ('Delta', ':', 137, 'images'),
- ('div', ':', 868, 'images'),
- ('infty', ':', 1783, 'images'),
- ('G', ':', 1692, 'images'),
- ('beta', ':', 2025, 'images'),
- ('in', ':', 47, 'images'),
- (',', ':', 1508, 'images'),
- ('7', ':', 2909, 'images'),
- ('forward_slash', ':', 199, 'images'),
- ('{', ':', 376, 'images'),
- ('=', ':', 13104)
- ('pm', ':', 802, 'images'), 
- ('cos', ':', 2986, 'images')]
- '''
 
