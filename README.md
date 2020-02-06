@@ -1,4 +1,5 @@
 # Handwritten Mathematical Character Recognition with a Simple CNN
+### _AKA: MathChar Wreck-ignition_
 
 ## Motivation
 In the annual competition known as CROHME (Competition on Recognition of Online Handwritten Mathematical Expressions), handwritten mathematical expression datasets are collected by participating institutions in order to build a larger and open corpus of data for mathematical character and expression recognition. All institutions can evaluate their models on this larger dataset and compare performance. Since the first competition in 2011, each iteration's datasets have been aggregated with any newly incoming data. In this project, I attempt to develop a simple CNN architecture trained to recognize / classify individual characters parsed from full mathematical expressions. 
@@ -45,15 +46,27 @@ The CROHME dataset contains handwritten mathematical expressions collected thoug
 </ink>
 ```
 
-From the INKML files provided in the CROHME dataset, the traces (pen strokes) for individual characters can be isolated and saved as individual images. Overall, there are 300,000+ images of individual characters. These data can be parsed into a directory structure containing images of each class, totaling 82 classes of characters. 
+From the INKML files provided in the CROHME dataset, the traces (pen strokes) for individual characters can be isolated and saved as individual images. This processed dataset was retrieved online to avoid redeveloping an existing script to parse the characters [Ref 3]. Onced parsed, there are 300,000+ images of individual characters. These data can be parsed into a directory structure containing images of each class, totaling 82 classes of characters. 
 
-## [IMAGE OF DIRECTORY STRUCTURE]
+![fig-dirstruct][dirstruct]
 
+[dirstruct]: plots/directorystructure.png "Class Directory Structure"
+
+***For the purposes of this project***, I will select a subset of this data for training and evaluating a simple CNN model to classifiy. Specifically, the following mathematical characters (which total 125480 samples):
+> pm,  infty,  div,  gt,  forward_slash,  leq,  times,  sin,  +,  cos,  -,  sqrt,  lim,  neq,  log,  ldots,  lt,  theta,  prime,  =,  tan,  e,  ),  geq
 
 
 ## [IMAGE OF SAMPLE OF INDIVIDUAL CHARS]
 
+
+
 ## EDA
+The first thing to consider in a categorical classifier is how the class samples are distributed. A simple histogram immediately shows a desparate class imbalance. 
+
+![fig-classdist][class-dist]
+
+[class-dist]: plots/classdistribution.png
+
 
 ## CNN Model
 
@@ -66,3 +79,4 @@ From the INKML files provided in the CROHME dataset, the traces (pen strokes) fo
 ## References
 - Ref 1: CROHME Data File Format. https://www.isical.ac.in/~crohme/data2.html
 - Ref 2: CROHME Call for participation. https://www.isical.ac.in/~crohme/crohme14.html
+- Ref 3: Isolated Character dataset: https://www.kaggle.com/xainano/handwrittenmathsymbols
