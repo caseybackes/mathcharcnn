@@ -7,6 +7,7 @@ from tensorflow.keras.utils import to_categorical
 from datetime import datetime as dt 
 import random 
 from class_count import class_count
+from eda import plot_class_distribution
 
 def create_training_data(data_directory, categories, shuffle=False, save_pickle=False, holdout_split=.1,scale=True,distribution_plot = True):
     training_data = []
@@ -40,7 +41,7 @@ def create_training_data(data_directory, categories, shuffle=False, save_pickle=
     # - - - Reshape as appropriate 
     X = np.array(X).reshape(-1,45,45, 1)
     if len(set(y)) > 2:
-        y = to_categorical(y) # for more than one class. 
+        y = to_categorical(y) # one-hot encodeing for more than one class -> y_i = [0,0,0,1,0,0,0]
     
     # - - - SCALE DATA
     if scale:
@@ -48,7 +49,7 @@ def create_training_data(data_directory, categories, shuffle=False, save_pickle=
 
     # - - - DISPLAY THE CLASS DISTRIBUTION
     if distribution_plot:
-        class_count(categories,data_directory)
+        ax = plot_class_distribution(categories)
     
     if save_pickle:
         # - - - Pickle save the feature and label datasets
