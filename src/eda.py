@@ -268,6 +268,8 @@ worst_misclassed = [categories[x] for x in idx_worst_misclass]
 
 def plot_imgrows(rows,cols,categories, data_directory,title,imsize=80,):
     fig,axs = plt.subplots(rows,cols,figsize =(rows,cols))
+    plt.suptitle(title,fontsize=20)
+
     for c in range(len(categories)-1):
         for i in range(cols):
             print("c: ", c, '\t i: ', i)
@@ -278,12 +280,12 @@ def plot_imgrows(rows,cols,categories, data_directory,title,imsize=80,):
             im_array_resized = cv2.resize(im_array,(imsize,imsize))
             axs[c, i].imshow(im_array_resized,cmap='gist_gray')
             axs[c, i].set_xticks([]); axs[c,i].set_yticks([])
-            axs[c, 0].set_ylabel(categories[c]).set_rotation(0)
-    plt.suptitle(title,fontsize=20)
-    fig.tight_layout(pad=0)
+            # axs[c, 0].set_ylabel(categories[c]).set_rotation(0)
+            axs[c, 0].set_title(categories[c])
+    # fig.tight_layout(pad=0)
     plt.show()
     return ax 
-plot_imgrows(len(categories)-1, 10, categories,data_directory, title='Classes Trained in CNN Model',imsize=50)
+plot_imgrows(6, 10, categories,data_directory, 'Sample of Some Classes Trained in CNN Model',imsize=50)
 '''
 fig.tight_layout(
     renderer=None,

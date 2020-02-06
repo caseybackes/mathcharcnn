@@ -9,7 +9,7 @@ import random
 from class_count import class_count
 from eda import plot_class_distribution
 
-def create_training_data(data_directory, categories, shuffle=False, save_pickle=False, holdout_split=.1,scale=True,distribution_plot = True):
+def create_training_data(data_directory, categories, shuffle=False, save_pickle=False, holdout_split=.1,scale=True,distribution_plot = False):
     training_data = []
     print('Building classes...')
     for category in categories:
@@ -20,9 +20,7 @@ def create_training_data(data_directory, categories, shuffle=False, save_pickle=
         class_num = categories.index(category) # index the label name to a number 
         # print('class num: ',class_num)
         for img in os.listdir(path):
-
             if img != '.DS_Store':
-
                 # print(os.path.join(data_directory,img))
                 # print("image to search for: ", img)
                 im_array = cv2.imread(os.path.join(path,img),cv2.IMREAD_GRAYSCALE) 
@@ -30,8 +28,6 @@ def create_training_data(data_directory, categories, shuffle=False, save_pickle=
                 training_data.append([im_array, class_num])
                 #print(f'class: {category},img: ', img)
     print(f"Built {len(categories)} classes.")
-
-
 
     if shuffle:    
         random.shuffle(training_data) # immutable, need not be stored in a var (also memory leak point if you do save to var)

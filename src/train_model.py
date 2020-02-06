@@ -27,7 +27,7 @@ if __name__ == "__main__":
     data_directory = '../../../../DataScienceProjects/handwrittenmathsymbols/extracted_images'
 
     # - - - CREATE TRAINING DATA
-    X_train, X_test, y_train, y_test  = create_training_data(data_directory,categories,shuffle=True,save_pickle=False,scale=True,distribution_plot=True)
+    X_train, X_test, y_train, y_test  = create_training_data(data_directory,categories,shuffle=True,save_pickle=False,scale=True,distribution_plot=False)
 
     # - - - HYPERPARAMETERS
     filter_size = (3,3)
