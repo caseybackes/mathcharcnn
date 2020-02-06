@@ -54,11 +54,11 @@ def create_training_data(data_directory, categories, shuffle=False, save_pickle=
         # - - - Pickle save the feature and label datasets
         tstmp = str(dt.now()).split('.')[0].replace(' ','-') 
         outstring= "../data/X"+tstmp+".pickle"
-	    pickle_out = open(outstring, 'wb')
+        pickle_out = open(outstring, 'wb')
         pickle.dump(X,pickle_out)
         pickle_out.close()
 
-	    outstring_y = "../data/y"+tstmp+".pickle"
+        outstring_y = "../data/y"+tstmp+".pickle"
         pickle_out = open(outstring_y, 'wb')
         pickle.dump(y,pickle_out)
         pickle_out.close()
