@@ -41,7 +41,7 @@ if __name__ == "__main__":
     model.class_names = categories # for use later in EDA
     hist = model.fit(X_train,y_train,batch_size= batch_size, epochs = training_epochs, validation_split = val_split)
     acc,result = evaluate_model(X_test,y_test, categories, model,limit = -1, return_prediction_array=True)
-    print(f'{"-"*80}\nPerformance on holdout set of {len(y_test)} images: \nAccuracy:{round(acc,6)}\nHistory: {hist.history}')
+#    print(f'{"-"*80}\nPerformance on holdout set of {len(y_test)} images: \nAccuracy:{round(acc,6)}\nHistory: {hist.history}')
 
     # - - - SAVE THE MODEL (OPTIONAL)
     saveme= input('Save model? (y/n):  ')
