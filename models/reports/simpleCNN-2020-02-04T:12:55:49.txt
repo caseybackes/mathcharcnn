@@ -1,0 +1,4 @@
+Classes in data: ['alpha', 'beta', 'pi', 'phi', 'gamma', 'sum', 'v', 'p', 'theta', 'times']
+Train-to-Holdout Ratio: 0.9
+Holdout Accuracy: 0.9815891472868217
+Model.History: <tensorflow.python.keras.callbacks.History object at 0x1a58ebba10>

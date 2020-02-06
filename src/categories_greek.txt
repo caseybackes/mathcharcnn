@@ -1,0 +1,12 @@
+beta
+Delta
+gamma
+infty
+mu
+sigma
+pi
+sum
+lambda
+theta
+alpha
+phi

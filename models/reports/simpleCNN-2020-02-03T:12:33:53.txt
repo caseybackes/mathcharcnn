@@ -1,0 +1,1 @@
+Classes in data: ['alpha', 'beta', 'pi', 'phi', 'gamma', 'sum', 'v', 'p', 'theta', 'times']Train-to-Holdout Ratio: 0.9Holdout Accuracy: 0.9859496124031008
