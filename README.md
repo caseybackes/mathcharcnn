@@ -113,6 +113,7 @@ Also noteworthy, there are two very different characters being used for the 'div
 ## CNN Model
 After exploring the common architectures for convolutional neural networks I decided on a simple architecture (described below) that consists of 2d convolutions, max pooling, occasional dropout, and a dense layer that feeds a final output layer with as many nodes as there are classes in the training data. Activation functions are all 'relu' up to the last layer which has a 'softmax' activation. This model uses `categorical_crossentropy` for a loss function, and measures `accuracy`, `precision`, and `recall` provided by `Tensorflow.keras.metrics`. I trained the model for 5 epochs. 
 
+
 ```
 Model: "sequential"
 _________________________________________________________________
@@ -175,35 +176,62 @@ array([[0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 
        [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0.]], dtype=float32)
 ```
 
-
-
 ## Model Performance 
-I scripted a reporting tool that would record the metrics on the model and to 
+While training the model, I observed that it was perfoming fairly well (read as "miraculously I scripted a reporting tool that would record the metrics on the model with the architecture. Below is the tabled version of the report.  
 
 
-```
+![fig-trainprogress][trainprogress]
 
-Classes in data: ['pm', 'infty', 'div', 'gt', 'forward_slash', 'leq', 'times', 'sin', '+', 'cos', '-', 'sqrt', 'lim', 'neq', 'log', 'ldots', 'lt', 'theta', 'prime', '=', 'tan', 'e', ')', 'geq']
-Model: Sequential
-Train-to-Holdout Ratio: 0.9
-Holdout Accuracy: 0.9822268271299912
-Model.History:
-loss: [0.7992878800226556, 0.13865616373838666, 0.07399723947373076, 0.052470665467551345, 0.04136091020918481]
-accuracy: [0.788524, 0.9641276, 0.98046005, 0.98649126, 0.98913795]
-categorical_accuracy: [0.788524, 0.9641276, 0.98046005, 0.98649126, 0.98913795]
-precision: [0.9551199, 0.97675145, 0.98462605, 0.9887253, 0.99080443]
-recall: [0.713798, 0.9561089, 0.97733134, 0.98446447, 0.98802614]
-val_loss: [0.19726133456462586, 0.08629346356667976, 0.06001814073045681, 0.04824599075078838, 0.0614393260697741]
-val_accuracy: [0.9526297, 0.9791039, 0.9841509, 0.9879582, 0.98246855]
-val_categorical_accuracy: [0.9526297, 0.9791039, 0.9841509, 0.9879582, 0.98246855]
-val_precision: [0.97446495, 0.9849839, 0.988757, 0.98952323, 0.98358476]
-val_recall: [0.93934834, 0.97573936, 0.98114043, 0.98680717, 0.9814946]
+[trainprogress]: plots/epoch4of5training.png
 
-```
 
+#### ***From Model.History()***
+
+| Metric | Epoch 1 | Epoch 2 | Epoch 3| Epoch 4 | Epoch 5 | 
+|----|----|----|----|----|----|
+|loss | 0.799 | 0.138 | 0.0739 | 0.052 | 0.041|
+|accuracy| 0.788| 0.964| 0.980 | 0.986 | 0.989 |
+|categorical_accuracy| 0.788| 0.964 | 0.980| 0.986| 0.989|
+|precision|0.955 | 0.976| 0.984| 0.988| 0.990|
+|recall| 0.713|  0.956| 0.977| 0.984| 0.988|
+|val_loss| 0.197| 0.086| 0.060| 0.048|0.061|
+|val_accuracy| 0.952| 0.979|0.984| 0.987|0.982|
+|val_categorical_accuracy|0.952 | 0.979| 0.984 |0.987| 0.982|
+|val_precision| 0.974| 0.984| 0.988|  0.989| 0.983|
+|val_recall| 0.939 | 0.975| 0.981| 0.986| 0.981|
+
+We can also take a look at how well the model performed on a 'per class' basis. The immediately obvious observation is that the `prime`, `tan`, `gt`, and `forward_slash` were classified correctly less than 90% of the time in the holdout set. Conversely, `sin`, `lt`, and `geq` were classified correctly every time in the holdout set. 
+
+![fig-percentcorrect][percentcorrect]
+
+[percentcorrect]: plots/percentcorrect.png
 
 
 ## Where does the model go wrong? 
+While most of the learning metrics above might initially seem satisfying, the real question is "Where could it be better?"
+
+I took a look at the number of times each class was "misclassified", and found that `tan`, `plus`, `infty`, and `prime` had the highest number of incorrect classification. 
+
+![fig-countmisclass][countmisclass]
+
+[countmisclass]: plots/countsmisclass.png
+
+
+This raises an obvious question about how the samples are distributed across the classes during training. So we divide each count of misclassification for each class by the number of samples in the test set for that class. This chart actually provides the same information as the "percent correct" bar chart, though frames the information as "this is how often the model predicts incorrectly on the test dataset for this class"
+
+![fig-normmisclass][normmisclass]
+
+[normmisclass]: plots/normedcountsmisclass.png
+
+If these classes are so difficult to predict, it makes me want to take another look at the images for these specific classes. 
+
+![fig-top5worst][top5]
+
+[top5]: plots/top5worst.png
+
+
+## Conclusion
+After seeing the decently successful results for the simple CNN for classifying these characters, it seems there are some classes the model struggles with, and reasonably so. A `prime` character is actually just a very small line, and during processing was resized to the same aspect ratio as characters that are typicall much larger. It might make more sense to classify the `prime` symbols as such depending on the context of where it was in the equation.  It's understandabel 
 
 ## Future Work
 
