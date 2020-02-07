@@ -8,7 +8,7 @@ import os
 
 def deletefromfolder(path):
     datadir = path
-    #print('Directory:', datadir)
+    # print('Directory:', datadir)
 
     rmmap = dict()
     total = 0
@@ -16,14 +16,14 @@ def deletefromfolder(path):
     for root, directories, filenames in os.walk(datadir):
         for filename in filenames:
             total += 1
-            if filename.endswith('.jpg') and not filename.startswith('._'):
+            if filename.endswith(".jpg") and not filename.startswith("._"):
                 filei = os.path.join(root, filename)
                 imi = imageio.imread(filei)
-                npi = np.asarray(imi).reshape(1, -1).reshape((2025, ))
+                npi = np.asarray(imi).reshape(1, -1).reshape((2025,))
                 idf = npi.tolist()
                 for i in range(len(idf)):
                     idf[i] = str(idf[i])
-                strlist = ''.join(idf)
+                strlist = "".join(idf)
 
                 if strlist in rmmap.keys():
                     repeatcnt += 1
@@ -31,17 +31,20 @@ def deletefromfolder(path):
                 else:
                     rmmap[strlist] = list()
 
-    #for key in rmmap:
+    # for key in rmmap:
     #    print(rmmap[key])
-    #print('Repeat/Total: {}/{}'.format(repeatcnt, total))
+    # print('Repeat/Total: {}/{}'.format(repeatcnt, total))
     for key in rmmap:
         for item in rmmap[key]:
-            print('For removal: ', os.path.join(datadir, item))#os.remove(os.path.join(datadir, item))
+            print(
+                "For removal: ", os.path.join(datadir, item)
+            )  # os.remove(os.path.join(datadir, item))
 
-if __name__ == '__main__':
-    images_path = '../../../../DataScienceProjects/handwrittenmathsymbols/extracted_images/' # '../images/extracted_images/'
+
+if __name__ == "__main__":
+    images_path = "../../../../DataScienceProjects/handwrittenmathsymbols/extracted_images/"  # '../images/extracted_images/'
     dirlist = os.listdir(images_path)
-    
+
     for item in dirlist:
-        deletefromfolder(os.path.join(images_path,item))
+        deletefromfolder(os.path.join(images_path, item))
         # print(item)

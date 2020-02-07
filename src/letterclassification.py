@@ -45,7 +45,9 @@ def letterdir(letter, return_array=False, return_path=False, limit=None):
             return onlyfiles
 
 
-def word2img(word, show=True, ):
+def word2img(
+    word, show=True,
+):
     left_edge_blank = np.ones((45, 1)) * 0
     for letter in word[::-1]:
         if letter == " ":

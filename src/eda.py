@@ -92,8 +92,8 @@ def plot_class_distribution(class_list):
     plt.ylim(min(y)-1, max(y)+1)
     add_value_labels(ax,sigfigs=0)
     fig.tight_layout(pad=0)
-    fig.savefig('../plots/Mathematical Character Histogram.png', dpi=125)
-    plt.show(block=False)
+    # fig.savefig('../plots/Mathematical Character Histogram.png', dpi=125)
+    # plt.show(block=False)
     return ax
 
 # ---------------------------------------------------------
@@ -198,23 +198,23 @@ plt.show()
 # plt.close('all')
 
 # - - - SOME ARE BEING CLASSIFIED INCORRECTLY A LOT. WHICH ONES, AND HOW MANY SAMPLES EXIST FOR IT TO TRAIN THE NETWORK ON ? 
-h = np.array(bad_pred)
-for h_i in h: 
-    char_class = h_i[0] 
-    first_guess = h_i[1][0] 
-    first_guess_p = h_i[2][0]
-    first_guess_p = round(first_guess_p,4)
-    second_guess = h_i[1][1] 
-    second_guess_p = h_i[2][1]
-    second_guess_p = round(second_guess_p,4)
-    third_guess = h_i[1][2] 
-    third_guess_p = h_i[2][2]
-    third_guess_p = round(third_guess_p,4)
+# h = np.array(bad_pred)
+# for h_i in h: 
+#     char_class = h_i[0] 
+#     first_guess = h_i[1][0] 
+#     first_guess_p = h_i[2][0]
+#     first_guess_p = round(first_guess_p,4)
+#     second_guess = h_i[1][1] 
+#     second_guess_p = h_i[2][1]
+#     second_guess_p = round(second_guess_p,4)
+#     third_guess = h_i[1][2] 
+#     third_guess_p = h_i[2][2]
+#     third_guess_p = round(third_guess_p,4)
     
-    if char_class == second_guess: 
-        print("it was the second guess") 
-        print(f"char class: '{char_class}' \t first guess: '{first_guess}' @ {round(first_guess_p,4)}% \tsecond guess: '{second_guess}' @ {second_guess_p}%") 
-        print('\n') 
+#     if char_class == second_guess: 
+#         print("it was the second guess") 
+#         print(f"char class: '{char_class}' \t first guess: '{first_guess}' @ {round(first_guess_p,4)}% \tsecond guess: '{second_guess}' @ {second_guess_p}%") 
+#         print('\n') 
 
 
 # - - - DICTIONARY OF BAD PREDICTION FREQUENCY BY CLASS
@@ -306,7 +306,7 @@ def plot_imgrows(rows,cols,categories, data_directory,title,imsize=80,):
     # fig.tight_layout(pad=0)
     plt.show()
     return ax 
-plot_imgrows(6, 10, categories,data_directory, 'Sample of Some Classes Trained in CNN Model',imsize=50)
+# plot_imgrows(6, 10, categories,data_directory, 'Sample of Some Classes Trained in CNN Model',imsize=50)
 '''
 fig.tight_layout(
     renderer=None,
