@@ -229,11 +229,20 @@ If these classes are so difficult to predict, it makes me want to take another l
 
 [top5]: plots/top5worst.png
 
+But when we look at how often the model would have predicted correctly on the second or third guess, it almost always gets it right on the second guess, if not the first. 
+
+![fig-freqfig][freqfig]
+
+[freqfig]: plots/freqfigure.png
+
 
 ## Conclusion
-After seeing the decently successful results for the simple CNN for classifying these characters, it seems there are some classes the model struggles with, and reasonably so. A `prime` character is actually just a very small line, and during processing was resized to the same aspect ratio as characters that are typicall much larger. It might make more sense to classify the `prime` symbols as such depending on the context of where it was in the equation.  It's understandabel 
+After seeing the decently successful results for the simple CNN for classifying these characters, it seems there are some classes the model struggles with, and reasonably so. A `prime` character is actually just a very small line, and during processing was resized to the same aspect ratio as characters that are typicall much larger. It might make more sense to classify the `prime` symbols as such depending on the context of where it was in the equation.  It's understandable that the characters that look like another (`forward_slash` and some `div` samples) are practically the same shape. 
+
+***Overall this model seemed to do well in most cases we would reasonably expect it to.***
 
 ## Future Work
+Burn this repo. 
 
 ## References
 - Ref 1: CROHME Data File Format. https://www.isical.ac.in/~crohme/data2.html
