@@ -228,11 +228,6 @@ This raises an obvious question about how the samples are distributed across the
 
 [normmisclass]: plots/normedcountsmisclass.png
 
-If these classes are so difficult to predict, it makes me want to take another look at the images for these specific classes. 
-
-![fig-top5worst][top5]
-
-[top5]: plots/top5worst.png
 
 But when we look at how often the model would have predicted correctly on the second or third guess, it almost always gets it right on the second guess, if not the first. 
 
