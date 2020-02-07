@@ -100,7 +100,6 @@ def plot_class_distribution(class_list):
 
 # - - - WHERE DOES THE MODEL GO WRONG? WHAT CHARS CAN WE CONSISTANTLY RECOGNIZE? 
 
-# model = load_model('../models/simpleCNN-2020-02-04T:13:14:02.h5')
 model_id = 'simpleCNN-2020-02-05T:20:53:54'#.h5'
 model = load_model(f'../models/{model_id}.h5')
 
@@ -307,40 +306,8 @@ def plot_imgrows(rows,cols,categories, data_directory,title,imsize=80,):
     plt.show()
     return ax 
 # plot_imgrows(6, 10, categories,data_directory, 'Sample of Some Classes Trained in CNN Model',imsize=50)
-'''
-fig.tight_layout(
-    renderer=None,
-    pad=1.08,
-    h_pad=None,
-    w_pad=None,
-    rect=None,
-)
-'''
-#!TODO: TURN THE FOLLOWING INTO A FUNCTION AND USE FOR THE WORST OFFENDERS AND THE CLASS-SET TRAINED ON. 
-# fig, axs = plt.subplots(5, 20,figsize=(15,6))
-# for c in range(len(worst_misclassed)-1):
-#     for i in range(20):
-#         class_path = os.path.join(data_directory, worst_misclassed[c])
-#         pickone = random.choice(os.listdir(class_path))
-#         path_to_one = os.path.join(class_path,pickone)
-#         im_array = cv2.imread(path_to_one,cv2.IMREAD_GRAYSCALE) 
-#         im_array_resized = cv2.resize(im_array, (80,80))
-#         axs[c, i].imshow(im_array_resized,cmap='gist_gray')
-#         axs[c, i].set_xticks([]); axs[c,i].set_yticks([])
-#         axs[c, 0].set_ylabel([c])
-# fig.text(x=0.31, y=0.01, s='Random samples from the classes most misclassified', \
-#     color='#888888', ha='center', va='bottom', fontsize=20)
-# plt.suptitle("Top 5 Worst Offenders",fontsize=20)
-# plt.show()
 
-
-
-# - - - What are the common misclassifications? ie: 'pi' is commonly mistaken for 'v' 
-# - - - What is the probability difference between the false classification and the true label? 
-
-# _,result = evaluate_model(X_test, y_test, categories, model, limit=-1, return_prediction_array=True)
-
-
+# - - - HOW OFTEN ARE WE CORRECT ON THE SECOND OR THIRD GUESS, IF NOT THE FIRST? 
 count_dict = class_prob_dist(y_test, yhat_probs,y_test_str, categories)
 
 # --- get the data
@@ -349,14 +316,20 @@ guess2 = np.array(list(count_dict.values()))[:,1]
 guess3 = np.array(list(count_dict.values()))[:,2]
 labels = list(count_dict.keys())
 
-# --- the plot – left then right
+# --- the plot 
 fig = plt.figure(figsize=(11,10))
 fig.suptitle('Frequency of 1st, 2nd, and 3rd \nHighest Probability for Correct Classification',fontsize=25)
+total_test_data_dict = dict()
+for c in y_test_classes:
+    if c not in total_test_data_dict:
+        total_test_data_dict[c] = 0 
+    total_test_data_dict[c]+=1
+
 
 for i in range(len(labels)):
     ax = fig.add_subplot(6,4,i+1)
-    ax.bar(np.arange(3), list(count_dict.values())[i], width=.6, color=['green','orange','red'])#,   label=['1','2','3']) 
-    ax.set_title(labels[i])
+    ax.bar(np.arange(3), list(count_dict.values())[i], width=.6, color=['green','orange','red']) 
+    ax.set_title(f"{labels[i]}, n= {total_test_data_dict[labels[i]]}")
     ax.set_xticklabels(['1','2','3'])
     ax.set_xticks([0,1,2])
 fig.tight_layout()
