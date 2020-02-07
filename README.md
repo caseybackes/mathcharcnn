@@ -61,7 +61,6 @@ From the INKML files provided in the CROHME dataset, the traces (pen strokes) fo
 > pm,  infty,  div,  gt,  forward_slash,  leq,  times,  sin,  +,  cos,  -,  sqrt,  lim,  neq,  log,  ldots,  lt,  theta,  prime,  =,  tan,  e,  ),  geq
 
 
-## [IMAGE OF SAMPLE OF INDIVIDUAL CHARS]
 
 ![figsample][sample-div]
 
