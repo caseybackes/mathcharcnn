@@ -1,4 +1,9 @@
 # Handwritten Mathematical Character Recognition with a Simple CNN
+
+![fig-cover][coverphoto]
+
+[coverphoto]: plots/coverphoto_mathchar.png
+
 ### _AKA: MathChar Wreck-ignition_
 
 ## Motivation
@@ -177,7 +182,7 @@ array([[0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 
 ```
 
 ## Model Performance 
-While training the model, I observed that it was perfoming fairly well (read as "miraculously I scripted a reporting tool that would record the metrics on the model with the architecture. Below is the tabled version of the report.  
+While training the model, I observed that it was perfoming quite well. I scripted a reporting tool that would record the metrics on the model with the architecture. Below is the text and the tabled versions of the report.  
 
 
 ![fig-trainprogress][trainprogress]
@@ -239,10 +244,8 @@ But when we look at how often the model would have predicted correctly on the se
 ## Conclusion
 After seeing the decently successful results for the simple CNN for classifying these characters, it seems there are some classes the model struggles with, and reasonably so. A `prime` character is actually just a very small line, and during processing was resized to the same aspect ratio as characters that are typicall much larger. It might make more sense to classify the `prime` symbols as such depending on the context of where it was in the equation.  It's understandable that the characters that look like another (`forward_slash` and some `div` samples) are practically the same shape. 
 
-***Overall this model seemed to do well in most cases we would reasonably expect it to.***
+***Overall this model seemed to do well in most cases we would reasonably expect it to, and we know why it didnt perform well on certain classes.***
 
-## Future Work
-Burn this repo. 
 
 ## References
 - Ref 1: CROHME Data File Format. https://www.isical.ac.in/~crohme/data2.html
