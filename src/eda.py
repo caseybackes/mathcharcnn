@@ -3,8 +3,29 @@ import numpy as np
 import matplotlib.pyplot as plt 
 from load_model import load_model
 from class_count import class_count
+from evaluate_model import evaluate_model
 
-def add_value_labels(ax,sigfigs,spacing=5):
+
+
+def class_prob_dist(y_test,yhat_probs,y_test_str,categories):
+    count_dict = dict()
+    rows = len(y_test)
+    for i in range(rows):
+        #its an alpha
+        clss= y_test_str[i]
+        # what was the top three probs and 
+        idx_top3 = np.argsort(yhat_probs[i])[::-1][0:3]
+        top3probs = [yhat_probs[i][x] for x in idx_top3]
+        top3pred = [categories[x] for x in idx_top3]
+        if clss not in count_dict.keys():
+            count_dict[clss] = [0,0,0]
+        for i in range(3):
+            if clss == top3pred[i]:
+                count_dict[clss][i]+=1
+    return count_dict 
+
+
+def add_value_labels(ax,sigfigs,spacing=5, ):
     # For each bar: Place a label
     for rect in ax.patches:
         # Get X and Y placement of label from rect.
@@ -316,4 +337,31 @@ fig.tight_layout(
 
 # - - - What are the common misclassifications? ie: 'pi' is commonly mistaken for 'v' 
 # - - - What is the probability difference between the false classification and the true label? 
+
+# _,result = evaluate_model(X_test, y_test, categories, model, limit=-1, return_prediction_array=True)
+
+
+count_dict = class_prob_dist(y_test, yhat_probs,y_test_str, categories)
+
+# --- get the data
+guess1 = np.array(list(count_dict.values()))[:,0]
+guess2 = np.array(list(count_dict.values()))[:,1]
+guess3 = np.array(list(count_dict.values()))[:,2]
+labels = list(count_dict.keys())
+
+# --- the plot – left then right
+fig = plt.figure(figsize=(11,10))
+fig.suptitle('Frequency of 1st, 2nd, and 3rd \nHighest Probability for Correct Classification',fontsize=25)
+
+for i in range(len(labels)):
+    ax = fig.add_subplot(6,4,i+1)
+    ax.bar(np.arange(3), list(count_dict.values())[i], width=.6, color=['green','orange','red'])#,   label=['1','2','3']) 
+    ax.set_title(labels[i])
+    ax.set_xticklabels(['1','2','3'])
+    ax.set_xticks([0,1,2])
+fig.tight_layout()
+
+
+
+
 
